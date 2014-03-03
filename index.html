@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script type="text/javascript">
+            function start() {
+                var prev='';
+                $.getJSON("dict.json", function(dict) {
+                    $('#search').keyup(function() {
+                        term = $('#search').val().toLowerCase();
+                        if (term == prev) {
+                            return;
+                        }
+                        prev = term;
+                        var r = $('#result').find('tbody');
+                        r.empty();
+                        var found = 0;
+                        $.each(dict, function(code, trans) {
+                            if (found > 100) {
+                                return;
+                            }
+                            if (trans.slice(0, term.length).toLowerCase() != term) {
+                                return;
+                            }
+                            ++found;
+                            r.append($('<tr>')
+                                .append($('<td>').html(code.replace('/', '/&#8203;')))
+                                .append($('<td>').text(trans))
+                            );
+                        });
+                    });
+                });
+            }
+        </script>
+        <style type="text/css">
+        </style>
+    </head>
+    <body>
+        <p>
+            <input id="search" autofocus="true" autocomplete="off" size="15"/>
+        </p>
+        <table id="result">
+            <tr><th/><th/></tr>
+        </table>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script>
+            if (!window.jQuery) {
+                document.write('<script src="jquery-2.1.0.min.js"><\/script>');
+            }
+            $(function() {
+                start();
+            });
+        </script>
+    </body>
+</html>
