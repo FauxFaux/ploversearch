@@ -1,4 +1,10 @@
 function start() {
+    if (typeof String.prototype.startsWith != 'function') {
+        String.prototype.startsWith = function (str){
+            return this.substring(0, str.length) == str;
+        };
+    }
+
     $.getJSON("dict.json", function(dict) {
         $('#search').keyup(function() {
             return doSearch(dict);
@@ -27,7 +33,7 @@ function doSearch(dict) {
 
     addMatchesToTable(dict, r, function(trans, term) {
         var v = trans.toLowerCase();
-        return v == term || v.slice(0, term.length) != term;
+        return v == term || !v.startsWith(term);
     });
 }
 
