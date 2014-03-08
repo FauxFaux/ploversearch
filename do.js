@@ -112,6 +112,7 @@ var meanings = [
     { from: "KWR", to: "y" },
     { from: "TPH", to: "n" },
     { from: "BGS", to: "x" },
+    { from: "KHR", to: "cl" }, // not ch-r
     { from: "SR", to: "v" },
     { from: "TK", to: "d" },
     { from: "TP", to: "f" },
@@ -126,6 +127,9 @@ var meanings = [
     { from: "PL", to: "m" },
     { from: "BG", to: "k" },
     { from: "GS", to: "ion" },
+    { from: "TH", to: "th" },
+    { from: "KH", to: "ch" },
+    { from: "SH", to: "sh" },
     { from: "AOEU", to: "eye" },
     { from: "AEU", to: "aa" },
     { from: "AOE", to: "ee" },
@@ -147,12 +151,18 @@ function decompose(code) {
     var ret;
     for (var i = 0; i < meanings.length; ++i) {
         var en = meanings[i];
-        if (!startsWith(code, en.from))
+        var end;
+        if (startsWith(code, en.from))
+            end = en.from.length;
+        else if (startsWith(code.replace('*', ''), en.from))
+            end = en.from.length + 1;
+        else
             continue;
+
         return [{
-            strokes: en.from,
+            strokes: code.substring(0, end),
             hint: en.to
-        }].concat(decompose(code.substring(en.from.length)));
+        }].concat(decompose(code.substring(end)));
     }
     var x = code.substring(0, 1);
     return [{
