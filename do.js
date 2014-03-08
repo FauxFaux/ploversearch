@@ -7,6 +7,7 @@ function start() {
 }
 
 var prev='';
+var timer = -1;
 
 function doSearch(dict) {
     term = $('#search').val().toLowerCase();
@@ -19,6 +20,10 @@ function doSearch(dict) {
     if (term.length <= 1) {
         return;
     }
+
+    addMatchesToTable(dict, r, function(trans, term) {
+        return trans.toLowerCase() != term
+    });
 
     addMatchesToTable(dict, r, function(trans, term) {
         return trans.slice(0, term.length).toLowerCase() != term
