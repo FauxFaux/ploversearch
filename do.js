@@ -3,6 +3,10 @@ function start() {
         $('#search').keyup(function() {
             return doSearch(dict);
         });
+        if (window.location.hash) {
+            $('#search').val(window.location.hash.substring(1));
+            doSearch(dict);
+        }
     });
 }
 
@@ -19,6 +23,10 @@ function doSearch(dict) {
         return;
     }
     prev = term;
+
+    window.location.hash = term;
+    history.pushState(term, '', window.location);
+
     var r = $('#result').find('tbody');
     r.empty();
     if (term.length <= 1) {
