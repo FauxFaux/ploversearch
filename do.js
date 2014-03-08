@@ -63,7 +63,7 @@ function addTr(r, code, trans) {
                 td.text(part.strokes);
             else {
                 td.append($('<u>')
-                    .css('color', colorFor(part.hint))
+                    .css('color', colorFor[part.strokes])
                     .append($('<span>')
                         .css('color', 'black')
                         .text(part.strokes)
@@ -72,7 +72,7 @@ function addTr(r, code, trans) {
 
             first.append(td);
             second.append($('<td>')
-                .css('color', colorFor(part.hint))
+                .css('color', colorFor[part.strokes])
                 .text(part.hint));
         });
         if (idx != splt.length - 1) {
@@ -143,7 +143,27 @@ function decompose(code) {
     }].concat(decompose(code.substring(1)));
 }
 
-function colorFor(str) {
-    return 'red';
+function rainbow(numOfSteps, step) {
+    // Adam Cole, 2011-Sept-14
+    var r, g, b;
+    var h = step / numOfSteps;
+    var i = ~~(h * 6);
+    var f = h * 6 - i;
+    var q = 1 - f;
+    switch(i % 6){
+        case 0: r = 1, g = f, b = 0; break;
+        case 1: r = q, g = 1, b = 0; break;
+        case 2: r = 0, g = 1, b = f; break;
+        case 3: r = 0, g = q, b = 1; break;
+        case 4: r = f, g = 0, b = 1; break;
+        case 5: r = 1, g = 0, b = q; break;
+    }
+    var c = "#" + ("00" + (~ ~(r * 255)).toString(16)).slice(-2) + ("00" + (~ ~(g * 255)).toString(16)).slice(-2) + ("00" + (~ ~(b * 255)).toString(16)).slice(-2);
+    return (c);
+}
+
+var colorFor = {};
+for (var i = 0; i < meanings.length; ++i) {
+    colorFor[meanings[i].from] = rainbow(meanings.length, i);
 }
 
