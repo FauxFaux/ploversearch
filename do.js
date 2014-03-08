@@ -58,8 +58,22 @@ function addTr(r, code, trans) {
     var splt = code.split(/\//);
     $.each(splt, function(idx, val) {
         $.each(decompose(val), function(inner, part) {
-            first.append($('<td>').html(part.strokes));
-            second.append($('<td>').html(part.hint));
+            var td = $('<td>');
+            if (part.strokes.length <= 1)
+                td.text(part.strokes);
+            else {
+                td.append($('<u>')
+                    .css('color', colorFor(part.hint))
+                    .append($('<span>')
+                        .css('color', 'black')
+                        .text(part.strokes)
+                    ));
+            }
+
+            first.append(td);
+            second.append($('<td>')
+                .css('color', colorFor(part.hint))
+                .text(part.hint));
         });
         if (idx != splt.length - 1) {
             first.append($('<td>').text('/'));
@@ -67,7 +81,7 @@ function addTr(r, code, trans) {
         }
     });
     r.append($('<tr>')
-        .append(tab)
+        .append($('<td>').append(tab))
         .append($('<td>').text(trans))
         );
 }
@@ -105,8 +119,8 @@ var meanings = [
     { from: "EU", to: "i" },
     { from: "OE", to: "oh" },
     { from: "AO", to: "oo" },
-    { from: "*", to: null },
-    { from: "-", to: null }
+    { from: "*", to: "" },
+    { from: "-", to: "" }
 ];
 
 function decompose(code) {
@@ -127,5 +141,9 @@ function decompose(code) {
         strokes: x,
         hint: x.toLowerCase()
     }].concat(decompose(code.substring(1)));
+}
+
+function colorFor(str) {
+    return 'red';
 }
 
