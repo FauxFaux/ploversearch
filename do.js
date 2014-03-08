@@ -32,11 +32,11 @@ function doSearch(dict) {
 
 function addMatchesToTable(dict, r, reject, found) {
     $.each(dict, function(code, trans) {
-        if (found > 100) {
-            return;
+        if (found > 50) {
+            return false;
         }
         if (reject(trans, term)) {
-            return;
+            return true;
         }
         ++found;
         r.append($('<tr>')
