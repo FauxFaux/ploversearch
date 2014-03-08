@@ -20,12 +20,17 @@ function doSearch(dict) {
         return;
     }
 
-    var found = 0;
+    addMatchesToTable(dict, r, function(trans, term) {
+        return trans.slice(0, term.length).toLowerCase() != term
+    });
+}
+
+function addMatchesToTable(dict, r, reject, found) {
     $.each(dict, function(code, trans) {
         if (found > 100) {
             return;
         }
-        if (trans.slice(0, term.length).toLowerCase() != term) {
+        if (reject(trans, term)) {
             return;
         }
         ++found;
