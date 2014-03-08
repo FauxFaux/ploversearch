@@ -1,7 +1,9 @@
 function start() {
     $.getJSON("dict.json", function(dict) {
         $('#search').keyup(function() {
-            return doSearch(dict);
+            delay(function() {
+                doSearch(dict);
+            }, 200);
         });
         if (window.location.hash) {
             $('#search').val(window.location.hash.substring(1));
@@ -15,7 +17,15 @@ function startsWith(haystack, needle) {
 }
 
 var prev='';
-var timer = -1;
+
+// https://stackoverflow.com/questions/1909441/jquery-keyup-delay
+var delay = (function(){
+    var timer = 0;
+    return function(callback, ms){
+        clearTimeout (timer);
+        timer = setTimeout(callback, ms);
+    };
+})();
 
 function doSearch(dict) {
     term = $('#search').val().toLowerCase();
