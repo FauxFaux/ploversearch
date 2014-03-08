@@ -22,15 +22,17 @@ function doSearch(dict) {
     }
 
     addMatchesToTable(dict, r, function(trans, term) {
-        return trans.toLowerCase() != term
+        return trans.toLowerCase() != term;
     });
 
     addMatchesToTable(dict, r, function(trans, term) {
-        return trans.slice(0, term.length).toLowerCase() != term
+        var v = trans.toLowerCase();
+        return v == term || v.slice(0, term.length) != term;
     });
 }
 
-function addMatchesToTable(dict, r, reject, found) {
+function addMatchesToTable(dict, r, reject) {
+    var found = 0;
     $.each(dict, function(code, trans) {
         if (found > 50) {
             return false;
@@ -44,8 +46,35 @@ function addMatchesToTable(dict, r, reject, found) {
 }
 
 function addTr(r, code, trans) {
+    var tab = $('<table>');
+    var first = $('<tr>');
+    var second = $('<tr>');
+    tab.append(first);
+    tab.append(second);
+    var splt = code.split(/\//);
+    $.each(splt, function(idx, val) {
+        $.each(decompose(val), function(inner, part) {
+            first.append($('<td>').html(part.strokes));
+            second.append($('<td>').html(part.hint));
+        });
+        if (idx != splt.length - 1) {
+            first.append($('<td>').text('/'));
+            second.append($('<td>'));
+        }
+    });
     r.append($('<tr>')
-        .append($('<td>').html(code.replace(/\//g, '/&#8203;')))
+        .append(tab)
         .append($('<td>').text(trans))
         );
 }
+
+function decompose(code) {
+    if ('' == code)
+        return [];
+    var x = code.substring(0, 1);
+    return [{
+        strokes: x,
+        hint: x.toLowerCase()
+    }].concat(decompose(code.substring(1)));
+}
+
