@@ -39,9 +39,13 @@ function addMatchesToTable(dict, r, reject, found) {
             return true;
         }
         ++found;
-        r.append($('<tr>')
-            .append($('<td>').html(code.replace(/\//g, '/&#8203;')))
-            .append($('<td>').text(trans))
-            );
+        addTr(r, code, trans);
     });
+}
+
+function addTr(r, code, trans) {
+    r.append($('<tr>')
+        .append($('<td>').html(code.replace(/\//g, '/&#8203;')))
+        .append($('<td>').text(trans))
+        );
 }
