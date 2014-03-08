@@ -1,15 +1,13 @@
 function start() {
-    if (typeof String.prototype.startsWith != 'function') {
-        String.prototype.startsWith = function (str){
-            return this.substring(0, str.length) == str;
-        };
-    }
-
     $.getJSON("dict.json", function(dict) {
         $('#search').keyup(function() {
             return doSearch(dict);
         });
     });
+}
+
+function startsWith(haystack, needle) {
+    return haystack.substring(0, needle.length) == needle;
 }
 
 var prev='';
@@ -33,7 +31,7 @@ function doSearch(dict) {
 
     addMatchesToTable(dict, r, function(trans, term) {
         var v = trans.toLowerCase();
-        return v == term || !v.startsWith(term);
+        return v == term || !startsWith(v, term);
     });
 }
 
@@ -74,9 +72,56 @@ function addTr(r, code, trans) {
         );
 }
 
+var meanings = [
+    { from: "STKPW", to: "z" },
+    { from: "SKWR", to: "j" },
+    { from: "TKPW", to: "g" },
+    { from: "PBLG", to: "j" },
+    { from: "KWR", to: "y" },
+    { from: "TPH", to: "n" },
+    { from: "BGS", to: "x" },
+    { from: "SR", to: "v" },
+    { from: "TK", to: "d" },
+    { from: "TP", to: "f" },
+    { from: "PH", to: "m" },
+    { from: "PW", to: "b" },
+    { from: "KW", to: "q" },
+    { from: "HR", to: "l" },
+    { from: "KP", to: "x" },
+    { from: "FP", to: "ch" },
+    { from: "RB", to: "sh" },
+    { from: "PB", to: "n" },
+    { from: "PL", to: "m" },
+    { from: "BG", to: "k" },
+    { from: "GS", to: "ion" },
+    { from: "AOEU", to: "eye" },
+    { from: "AEU", to: "aa" },
+    { from: "AOE", to: "ee" },
+    { from: "AOU", to: "oo" },
+    { from: "OEU", to: "oy" },
+    { from: "AU", to: "aw" },
+    { from: "EA", to: "ea" },
+    { from: "OU", to: "ow" },
+    { from: "EU", to: "i" },
+    { from: "OE", to: "oh" },
+    { from: "AO", to: "oo" },
+    { from: "*", to: null },
+    { from: "-", to: null }
+];
+
 function decompose(code) {
     if ('' == code)
         return [];
+    var ret;
+    for (var i = 0; i < meanings.length; ++i) {
+        var en = meanings[i];
+        if (!startsWith(code, en.from))
+            continue;
+        return [{
+            strokes: en.from,
+            hint: en.to
+        }].concat(decompose(code.substring(en.from.length)));
+    }
     var x = code.substring(0, 1);
     return [{
         strokes: x,
