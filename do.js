@@ -9,6 +9,9 @@ function start() {
             prev = term;
             var r = $('#result').find('tbody');
             r.empty();
+            if (term.length <= 1) {
+                return;
+            }
             var found = 0;
             $.each(dict, function(code, trans) {
                 if (found > 100) {
