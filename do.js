@@ -8,6 +8,7 @@ function start() {
 
 var prev='';
 var timer = -1;
+var timer2 = -1;
 
 function doSearch(dict) {
     term = $('#search').val().toLowerCase();
@@ -21,13 +22,19 @@ function doSearch(dict) {
         return;
     }
 
-    addMatchesToTable(dict, r, function(trans, term) {
-        return trans.toLowerCase() != term
-    });
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+        addMatchesToTable(dict, r, function(trans, term) {
+            return trans.toLowerCase() != term
+        });
+    }, 0);
 
-    addMatchesToTable(dict, r, function(trans, term) {
-        return trans.slice(0, term.length).toLowerCase() != term
-    });
+    clearTimeout(timer2);
+    timer2 = setTimeout(function() {
+        addMatchesToTable(dict, r, function(trans, term) {
+            return trans.slice(0, term.length).toLowerCase() != term
+        });
+    }, 15);
 }
 
 function addMatchesToTable(dict, r, reject, found) {
