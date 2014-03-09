@@ -79,12 +79,14 @@ function addTr(r, code, trans) {
         $.each(decompose(val), function(inner, part) {
             var td = $('<td>');
             if (part.strokes.length <= 1)
-                td.text(part.strokes);
+                td.text(part.strokes)
+                    .addClass('notranslate');
             else {
                 td.append($('<u>')
                     .css('color', colorFor[part.strokes])
                     .append($('<span>')
                         .css('color', 'black')
+                        .addClass('notranslate')
                         .text(part.strokes)
                     ));
             }
@@ -92,6 +94,7 @@ function addTr(r, code, trans) {
             first.append(td);
             second.append($('<td>')
                 .css('color', colorFor[part.strokes])
+                .addClass('notranslate')
                 .text(part.hint));
         });
         if (idx != splt.length - 1) {
