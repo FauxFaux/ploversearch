@@ -68,13 +68,14 @@ function addMatchesToTable(dict, r, reject) {
 }
 
 function addTr(r, code, trans) {
-    var tab = $('<table>');
-    var first = $('<tr>');
-    var second = $('<tr>');
-    tab.append(first);
-    tab.append(second);
+    var cell = $('<td>');
     var splt = code.split(/\//);
     $.each(splt, function(idx, val) {
+        var tab = $('<table>');
+        var first = $('<tr>');
+        var second = $('<tr>');
+        tab.append(first);
+        tab.append(second);
         $.each(decompose(val), function(inner, part) {
             var td = $('<td>');
             if (part.strokes.length <= 1)
@@ -97,9 +98,10 @@ function addTr(r, code, trans) {
             first.append($('<td>').text('/'));
             second.append($('<td>'));
         }
+        cell.append(tab);
     });
     r.append($('<tr>')
-        .append($('<td>').append(tab))
+        .append(cell)
         .append($('<td>').text(trans))
         );
 }
