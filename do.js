@@ -1,13 +1,20 @@
 function start() {
     $.getJSON("dict.json", function(dict) {
+        var rot = {};
+        $.each(dict, function(key, val) {
+            if (!rot[val])
+                rot[val] = [];
+            rot[val].push(key);
+        });
         $('#search').keyup(function() {
             delay(function() {
-                doSearch(dict);
+                doSearch(rot);
             }, 200);
         });
+        resultTable();
         if (window.location.hash) {
             $('#search').val(window.location.hash.substring(1));
-            doSearch(dict);
+            doSearch(rot);
         }
     });
 }
@@ -27,8 +34,14 @@ var delay = (function(){
     };
 })();
 
+function resultTable() {
+    var r = $('#result').find('tbody');
+    r.empty();
+    return r;
+}
+
 function doSearch(dict) {
-    term = $('#search').val().toLowerCase();
+    term = $('#search').val();
     if (term == prev) {
         return;
     }
@@ -37,25 +50,41 @@ function doSearch(dict) {
     window.location.hash = term;
     history.pushState(term, '', window.location);
 
-    var r = $('#result').find('tbody');
-    r.empty();
+    var r = resultTable();
     if (term.length <= 1) {
         return;
     }
 
-    addMatchesToTable(dict, r, function(trans, term) {
-        return trans.toLowerCase() != term;
-    });
+    if (dict[term]) {
+        $.each(dict[term], function(idx, code) {
+            addTr(r, code, term);
+        });
+    }
+    var loading = $('<td>')
+        .attr('colspan', '2')
+        .css('text-align', 'center')
+        .attr('id', 'inexact')
+        .text("(inexact results loading...)");
 
-    addMatchesToTable(dict, r, function(trans, term) {
-        var v = trans.toLowerCase();
-        return v == term || !startsWith(v, term);
-    });
+    r.append($('<tr>').append(loading));
+
+    setTimeout(function() {
+        var total = addMatchesToTable(dict, r, function(trans, term) {
+            var v = trans.toLowerCase();
+            return trans == term || !startsWith(v, term.toLowerCase());
+        });
+        var inex = $('#inexact');
+        if (0 != total)
+            inex.text('(' + total
+                    + ' inexact match' + (total == 1 ? '' : 'es') + ')');
+        else
+            inex.text('');
+    }, 0);
 }
 
 function addMatchesToTable(dict, r, reject) {
     var found = 0;
-    $.each(dict, function(code, trans) {
+    $.each(dict, function(trans, codes) {
         if (found > 50) {
             return false;
         }
@@ -63,8 +92,11 @@ function addMatchesToTable(dict, r, reject) {
             return true;
         }
         ++found;
-        addTr(r, code, trans);
+        $.each(codes, function(idx, code) {
+            addTr(r, code, trans);
+        });
     });
+    return found;
 }
 
 function addTr(r, code, trans) {
