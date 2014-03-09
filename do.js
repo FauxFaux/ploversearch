@@ -2,8 +2,8 @@ function start() {
     $.getJSON("dict.json", function(dict) {
         var rot = {};
         $.each(dict, function(key, val) {
-            if (!rot[val])
-                rot[val] = [];
+            if (typeof rot[val] !== 'object')
+                rot[val] = new Array();
             rot[val].push(key);
         });
         $('#search').keyup(function() {
