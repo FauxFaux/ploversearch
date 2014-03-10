@@ -1,5 +1,7 @@
 function start() {
+    $('#status').text('JQuery works!  Downloading dictionary...');
     $.getJSON("dict.json", function(dict) {
+        $('#status').text('Parsing dictionary...');
         var rot = {};
         $.each(dict, function(key, val) {
             if (typeof rot[val] !== 'object')
