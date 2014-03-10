@@ -3,11 +3,21 @@ function start() {
     $.getJSON("dict.json", function(dict) {
         $('#status').text('Parsing dictionary...');
         var rot = {};
+        // {
+        //  'ra': { 'Raspberry': [ 'R-B', 'R*B'] },
+        //  'po': { 'ponies': [ 'P' ], 'pony': [ 'P-P' ] }
+        // }
         $.each(dict, function(key, val) {
-            if (typeof rot[val] !== 'object')
-                rot[val] = new Array();
-            rot[val].push(key);
+            if (val.length < 2)
+                return true;
+            var pre = val.substring(0, 2).toLowerCase();
+            if (typeof rot[pre] !== 'object')
+                rot[pre] = new Object();
+            if (typeof rot[pre][val] !== 'object')
+                rot[pre][val] = new Array();
+            rot[pre][val].push(key);
         });
+        delete dict;
         $('#search').keyup(function() {
             delay(function() {
                 doSearch(rot);
@@ -57,8 +67,10 @@ function doSearch(dict) {
         return;
     }
 
-    if (dict[term]) {
-        $.each(dict[term], function(idx, code) {
+    var pre = term.substring(0, 2).toLowerCase();
+
+    if (dict[pre][term]) {
+        $.each(dict[pre][term], function(idx, code) {
             addTr(r, code, term);
         });
     }
@@ -71,7 +83,7 @@ function doSearch(dict) {
     r.append($('<tr>').append(loading));
 
     setTimeout(function() {
-        var total = addMatchesToTable(dict, r, function(trans, term) {
+        var total = addMatchesToTable(dict[pre], r, function(trans, term) {
             var v = trans.toLowerCase();
             return trans == term || !startsWith(v, term.toLowerCase());
         });
