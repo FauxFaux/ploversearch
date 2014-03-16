@@ -4,8 +4,8 @@ function start() {
         $('#status').text('Parsing dictionary...');
         var rot = {};
         // {
-        //  'ra': { 'Raspberry': [ 'R-B', 'R*B'] },
-        //  'po': { 'ponies': [ 'P' ], 'pony': [ 'P-P' ] }
+        //  'ras': { 'Raspberry': [ 'R-B', 'R*B'] },
+        //  'pon': { 'ponies': [ 'P' ], 'pony': [ 'P-P' ] }
         // }
         $.each(dict, function(key, val) {
             if (val.length < 2)
@@ -36,7 +36,7 @@ function startsWith(haystack, needle) {
 }
 
 function summarise(val) {
-    return val.substring(0, 2).toLowerCase();
+    return val.substring(0, 3).toLowerCase();
 }
 
 var prev='';
@@ -72,6 +72,10 @@ function doSearch(dict) {
     }
 
     var pre = summarise(term);
+
+    if (!(pre in dict)) {
+        return;
+    }
 
     if (dict[pre][term]) {
         $.each(dict[pre][term], function(idx, code) {
