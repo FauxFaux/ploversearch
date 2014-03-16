@@ -10,7 +10,7 @@ function start() {
         $.each(dict, function(key, val) {
             if (val.length < 2)
                 return true;
-            var pre = val.substring(0, 2).toLowerCase();
+            var pre = summarise(val);
             if (typeof rot[pre] !== 'object')
                 rot[pre] = new Object();
             if (typeof rot[pre][val] !== 'object')
@@ -33,6 +33,10 @@ function start() {
 
 function startsWith(haystack, needle) {
     return haystack.substring(0, needle.length) == needle;
+}
+
+function summarise(val) {
+    return val.substring(0, 2).toLowerCase();
 }
 
 var prev='';
@@ -67,7 +71,7 @@ function doSearch(dict) {
         return;
     }
 
-    var pre = term.substring(0, 2).toLowerCase();
+    var pre = summarise(term);
 
     if (dict[pre][term]) {
         $.each(dict[pre][term], function(idx, code) {
