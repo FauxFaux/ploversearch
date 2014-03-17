@@ -28,6 +28,9 @@ function start() {
             $('#search').val(window.location.hash.substring(1));
             doSearch(rot);
         }
+        $('#search').show();
+    }).fail(function(xhr, stat, error) {
+        $('#status').text('Fatal error downloading dictionary.  Nothing more to see here...' + stat + " / " + error);
     });
 }
 
