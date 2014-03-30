@@ -80,10 +80,12 @@ function doSearch(dict) {
         return;
     }
 
+    var hadExact = false;
     if (dict[pre][term]) {
         $.each(dict[pre][term], function(idx, code) {
             addTr(r, code, term);
         });
+        hadExact = true;
     }
     var loading = $('<td>')
         .attr('colspan', '2')
@@ -102,8 +104,10 @@ function doSearch(dict) {
         if (0 != total)
             inex.text('(' + total
                     + ' inexact match' + (total == 1 ? '' : 'es') + ')');
+        else if (total > 50)
+            inex.text('(over 50 inexact matches)');
         else
-            inex.text('');
+            inex.text('(no ' + (hadExact ? 'further ' : '') + 'matches)');
     }, 0);
 }
 
