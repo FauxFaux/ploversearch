@@ -178,6 +178,7 @@ var meanings = [
     { from: "KWR", to: "y" },
     { from: "TPH", to: "n" },
     { from: "BGS", to: "x" },
+    { from: "FPL", to: "sm" },
     { from: "KHR", to: "cl" }, // not ch-r
     { from: "PHR", to: "pl" }, // not m-r
     { from: "SR", to: "v" },
