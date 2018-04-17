@@ -1,62 +1,69 @@
 <!DOCTYPE html>
 <html lang="en-US">
-    <head>
-        <meta name="viewport" content="width=device-width"/>
-        <title>Plover dictionary lookup tool</title>
-        <script type="text/javascript" src="do.js"></script>
-        <link rel="prefetch" href="dict.json"/>
-        <style type="text/css">
-            #search {
-                width: 100%
-            }
-            #result {
-                width: 100%;
-                border-spacing: 0;
-            }
-            td {
-                border: 1px solid #ccc;
-                padding: 2px;
-                padding-bottom: 0;
-            }
-            td table {
-                display: inline-block;
-            }
-            td td {
-                text-align: center;
-                padding: 0;
-                border: 0;
-            }
-            td tr+tr td {
-                font-size: 80%;
-                line-height: 70%;
-            }
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Plover dictionary lookup tool</title>
+    <script type="text/javascript" src="do.js"></script>
+    <link rel="prefetch" href="dict.json"/>
+    <style type="text/css">
+        #search {
+            width: 100%
+        }
 
-            #search {
-                display: none
-            }
-        </style>
-    </head>
-    <body>
-        <p>
-            <input id="search" autofocus="true" autocomplete="off" size="15"/>
-        </p>
-        <table id="result">
-            <tr><th id='status' colspan="2">Waiting for JQuery to boot...</th></tr>
-        </table>
-        <p>
-            <a href="https://blog.goeswhere.com/">Faux' blog</a> - 
-            <a href="https://github.com/FauxFaux/ploversearch">github</a> - issues welcome
-        </p>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-        <script>
-            if (!window.jQuery) {
-                document.write('<script src="jquery-2.1.0.min.js"><\/script>');
-            }
-        </script>
-        <script>
-            $(function() {
-                start();
-            });
-        </script>
-    </body>
+        #result {
+            width: 100%;
+            border-spacing: 0;
+        }
+
+        td {
+            border: 1px solid #ccc;
+            padding: 2px;
+            padding-bottom: 0;
+        }
+
+        td table {
+            display: inline-block;
+        }
+
+        td td {
+            text-align: center;
+            padding: 0;
+            border: 0;
+        }
+
+        td tr + tr td {
+            font-size: 80%;
+            line-height: 70%;
+        }
+
+        #search {
+            display: none
+        }
+    </style>
+</head>
+<body>
+<p>
+    <input id="search" autofocus="true" autocomplete="off" size="15"/>
+</p>
+<table id="result">
+    <tr>
+        <th id='status' colspan="2">Waiting for JQuery to boot...</th>
+    </tr>
+</table>
+<p>
+    <a href="https://blog.goeswhere.com/">Faux' blog</a> -
+    <a href="https://github.com/FauxFaux/ploversearch">github</a> - issues welcome
+</p>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script>
+    if (!window.jQuery) {
+        document.write('<script src="jquery-2.1.0.min.js"><\/script>');
+    }
+</script>
+<script>
+    $(function () {
+        start();
+    });
+</script>
+</body>
 </html>

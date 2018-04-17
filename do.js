@@ -1,13 +1,13 @@
 function start() {
     $('#status').text('JQuery works!  Downloading dictionary...');
-    $.getJSON("dict.json", function(dict) {
+    $.getJSON("dict.json", function (dict) {
         $('#status').text('Parsing dictionary...');
         var rot = {};
         // {
         //  'ras': { 'Raspberry': [ 'R-B', 'R*B'] },
         //  'pon': { 'ponies': [ 'P' ], 'pony': [ 'P-P' ] }
         // }
-        $.each(dict, function(key, val) {
+        $.each(dict, function (key, val) {
             if (val.length < 2)
                 return true;
             var pre = summarise(val);
@@ -18,8 +18,8 @@ function start() {
             rot[pre][val].push(key);
         });
         delete dict;
-        $('#search').keyup(function() {
-            delay(function() {
+        $('#search').keyup(function () {
+            delay(function () {
                 doSearch(rot);
             }, 200);
         });
@@ -29,7 +29,7 @@ function start() {
             doSearch(rot);
         }
         $('#search').show();
-    }).fail(function(xhr, stat, error) {
+    }).fail(function (xhr, stat, error) {
         $('#status').text('Fatal error downloading dictionary.  Nothing more to see here...' + stat + " / " + error);
     });
 }
@@ -42,13 +42,13 @@ function summarise(val) {
     return val.substring(0, 3).toLowerCase();
 }
 
-var prev='';
+var prev = '';
 
 // https://stackoverflow.com/questions/1909441/jquery-keyup-delay
-var delay = (function(){
+var delay = (function () {
     var timer = 0;
-    return function(callback, ms){
-        clearTimeout (timer);
+    return function (callback, ms) {
+        clearTimeout(timer);
         timer = setTimeout(callback, ms);
     };
 })();
@@ -82,7 +82,7 @@ function doSearch(dict) {
 
     var hadExact = false;
     if (dict[pre][term]) {
-        $.each(dict[pre][term], function(idx, code) {
+        $.each(dict[pre][term], function (idx, code) {
             addTr(r, code, term);
         });
         hadExact = true;
@@ -95,15 +95,15 @@ function doSearch(dict) {
 
     r.append($('<tr>').append(loading));
 
-    setTimeout(function() {
-        var total = addMatchesToTable(dict[pre], r, function(trans, term) {
+    setTimeout(function () {
+        var total = addMatchesToTable(dict[pre], r, function (trans, term) {
             var v = trans.toLowerCase();
             return trans == term || !startsWith(v, term.toLowerCase());
         });
         var inex = $('#inexact');
         if (0 != total)
             inex.text('(' + total
-                    + ' inexact match' + (total == 1 ? '' : 'es') + ')');
+                + ' inexact match' + (total == 1 ? '' : 'es') + ')');
         else if (total > 50)
             inex.text('(over 50 inexact matches)');
         else
@@ -113,7 +113,7 @@ function doSearch(dict) {
 
 function addMatchesToTable(dict, r, reject) {
     var found = 0;
-    $.each(dict, function(trans, codes) {
+    $.each(dict, function (trans, codes) {
         if (found > 50) {
             return false;
         }
@@ -121,7 +121,7 @@ function addMatchesToTable(dict, r, reject) {
             return true;
         }
         ++found;
-        $.each(codes, function(idx, code) {
+        $.each(codes, function (idx, code) {
             addTr(r, code, trans);
         });
     });
@@ -131,13 +131,13 @@ function addMatchesToTable(dict, r, reject) {
 function addTr(r, code, trans) {
     var cell = $('<td>');
     var splt = code.split(/\//);
-    $.each(splt, function(idx, val) {
+    $.each(splt, function (idx, val) {
         var tab = $('<table>');
         var first = $('<tr>');
         var second = $('<tr>');
         tab.append(first);
         tab.append(second);
-        $.each(decompose(val), function(inner, part) {
+        $.each(decompose(val), function (inner, part) {
             var td = $('<td>');
             if (part.strokes.length <= 1)
                 td.text(part.strokes)
@@ -167,50 +167,50 @@ function addTr(r, code, trans) {
     r.append($('<tr>')
         .append(cell)
         .append($('<td>').text(trans))
-        );
+    );
 }
 
 var meanings = [
-    { from: "STKPW", to: "z" },
-    { from: "SKWR", to: "j" },
-    { from: "TKPW", to: "g" },
-    { from: "PBLG", to: "j" },
-    { from: "KWR", to: "y" },
-    { from: "TPH", to: "n" },
-    { from: "BGS", to: "x" },
-    { from: "FPL", to: "sm" },
-    { from: "KHR", to: "cl" }, // not ch-r
-    { from: "PHR", to: "pl" }, // not m-r
-    { from: "SR", to: "v" },
-    { from: "TK", to: "d" },
-    { from: "TP", to: "f" },
-    { from: "PH", to: "m" },
-    { from: "PW", to: "b" },
-    { from: "KW", to: "q" },
-    { from: "HR", to: "l" },
-    { from: "KP", to: "x" },
-    { from: "FP", to: "ch" },
-    { from: "RB", to: "sh" },
-    { from: "PB", to: "n" },
-    { from: "PL", to: "m" },
-    { from: "BG", to: "k" },
-    { from: "GS", to: "ion" },
-    { from: "TH", to: "th" },
-    { from: "KH", to: "ch" },
-    { from: "SH", to: "sh" },
-    { from: "AOEU", to: "eye" },
-    { from: "AEU", to: "aa" },
-    { from: "AOE", to: "ee" },
-    { from: "AOU", to: "oo" },
-    { from: "OEU", to: "oy" },
-    { from: "AU", to: "aw" },
-    { from: "EA", to: "ea" },
-    { from: "OU", to: "ow" },
-    { from: "EU", to: "i" },
-    { from: "OE", to: "oh" },
-    { from: "AO", to: "oo" },
-    { from: "*", to: "" },
-    { from: "-", to: "" }
+    {from: "STKPW", to: "z"},
+    {from: "SKWR", to: "j"},
+    {from: "TKPW", to: "g"},
+    {from: "PBLG", to: "j"},
+    {from: "KWR", to: "y"},
+    {from: "TPH", to: "n"},
+    {from: "BGS", to: "x"},
+    {from: "FPL", to: "sm"},
+    {from: "KHR", to: "cl"}, // not ch-r
+    {from: "PHR", to: "pl"}, // not m-r
+    {from: "SR", to: "v"},
+    {from: "TK", to: "d"},
+    {from: "TP", to: "f"},
+    {from: "PH", to: "m"},
+    {from: "PW", to: "b"},
+    {from: "KW", to: "q"},
+    {from: "HR", to: "l"},
+    {from: "KP", to: "x"},
+    {from: "FP", to: "ch"},
+    {from: "RB", to: "sh"},
+    {from: "PB", to: "n"},
+    {from: "PL", to: "m"},
+    {from: "BG", to: "k"},
+    {from: "GS", to: "ion"},
+    {from: "TH", to: "th"},
+    {from: "KH", to: "ch"},
+    {from: "SH", to: "sh"},
+    {from: "AOEU", to: "eye"},
+    {from: "AEU", to: "aa"},
+    {from: "AOE", to: "ee"},
+    {from: "AOU", to: "oo"},
+    {from: "OEU", to: "oy"},
+    {from: "AU", to: "aw"},
+    {from: "EA", to: "ea"},
+    {from: "OU", to: "ow"},
+    {from: "EU", to: "i"},
+    {from: "OE", to: "oh"},
+    {from: "AO", to: "oo"},
+    {from: "*", to: ""},
+    {from: "-", to: ""}
 ];
 
 function decompose(code) {
@@ -246,15 +246,30 @@ function rainbow(numOfSteps, step) {
     var i = ~~(h * 6);
     var f = h * 6 - i;
     var q = 1 - f;
-    switch(i % 6){
-        case 0: r = 1, g = f, b = 0; break;
-        case 1: r = q, g = 1, b = 0; break;
-        case 2: r = 0, g = 1, b = f; break;
-        case 3: r = 0, g = q, b = 1; break;
-        case 4: r = f, g = 0, b = 1; break;
-        case 5: r = 1, g = 0, b = q; break;
+    switch (i % 6) {
+        case 0:
+            r = 1, g = f, b = 0;
+            break;
+        case 1:
+            r = q, g = 1, b = 0;
+            break;
+        case 2:
+            r = 0, g = 1, b = f;
+            break;
+        case 3:
+            r = 0, g = q, b = 1;
+            break;
+        case 4:
+            r = f, g = 0, b = 1;
+            break;
+        case 5:
+            r = 1, g = 0, b = q;
+            break;
     }
-    var c = "#" + ("00" + (~ ~(r * 255)).toString(16)).slice(-2) + ("00" + (~ ~(g * 255)).toString(16)).slice(-2) + ("00" + (~ ~(b * 255)).toString(16)).slice(-2);
+    var c = "#"
+        + ("00" + (~~(r * 255)).toString(16)).slice(-2)
+        + ("00" + (~~(g * 255)).toString(16)).slice(-2)
+        + ("00" + (~~(b * 255)).toString(16)).slice(-2);
     return (c);
 }
 
@@ -262,4 +277,3 @@ var colorFor = {};
 for (var i = 0; i < meanings.length; ++i) {
     colorFor[meanings[i].from] = rainbow(meanings.length, i);
 }
-
